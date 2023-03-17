@@ -8,9 +8,15 @@ const {Sequelize,DataTypes}=require('sequelize')
 
 module.exports = (sequelize)=>{
     const User = sequelize.define('User',{
+        ID_User:{
+            type:DataTypes.INTEGER,
+            primaryKey:true,
+            autoIncrement:true
+        },
         NationalRegist:{
             type:DataTypes.INTEGER,
-            primaryKey:true
+            allowNull:true,
+            default:null
         },
         login:{
             type:DataTypes.STRING(50),
@@ -34,6 +40,7 @@ module.exports = (sequelize)=>{
         },
         role:{
             type:DataTypes.STRING(50),
+            allowNull:true,
             defaultValue:'User'
         }
 

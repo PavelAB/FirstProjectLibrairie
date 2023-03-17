@@ -2,9 +2,18 @@ require('dotenv').config(); // Si j'ai des donnees dans un fichier .env, il faut
 // https://www.npmjs.com/package/dotenv
 
 
+//importe de l'express.
+const express = require('express')
+//creaton de l'instance express
+const app = express() 
+
+
+//absolument mettre avant le route car si non l'express n'est pas au courant de l'existance de objet json
+app.use(express.json())
 
 //j'importe mon objet db
-const db = require ('./models') 
+const db = require ('./models')
+const router = require('./routes')
 
 
 //Je verifie si je suis bien connecter a ma BD.
@@ -16,5 +25,10 @@ if (process.env.NODE_ENV==='development'){
     //db.sequelize.sync({alter:{drop:false}})
 }
 
+app.use('/api',router)   // .use(chemin,middleware)
 
+//defini le port et lance notre app sur le port donner
+app.listen(process.env.PORT, ()=>{
+    console.log(`Server API started on port ${process.env.PORT}`);
+})
 

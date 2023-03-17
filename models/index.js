@@ -23,6 +23,7 @@ db.Author= require('./author.model')(sequelize)
 db.Book=require('./books.model')(sequelize)
 db.User=require('./user.model')(sequelize)
 db.Orders=require('./orders.model')(sequelize)
+db.Genres=require('./genres.model')(sequelize)
 
 //Many-to-Many
 db.Book.belongsToMany(db.Author,{through:'MM_Book_Author'})
@@ -31,9 +32,14 @@ db.Author.belongsToMany(db.Book,{through:'MM_Book_Author'})
 db.Book.belongsToMany(db.Orders,{through:'MM_Book_Orders'})
 db.Orders.belongsToMany(db.Book,{through:'MM_Book_Orders'})
 
+db.Book.belongsToMany(db.Genres,{through:'MM_Book_Genres'})
+db.Genres.belongsToMany(db.Book,{through:'MM_Book_Genres'})
+
 //One-to-Many
 
 db.User.hasMany(db.Orders)
 db.Orders.belongsTo(db.User)
+
+
 
 module.exports=db;

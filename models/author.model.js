@@ -13,8 +13,12 @@ module.exports = (sequelize) =>{
     const Author = sequelize.define('Author',{
         //les noms de colonnes,avec leurs descriptions
         ID_Author:{
-            type:DataTypes.STRING(50),
-            primaryKey:true
+            //type:DataTypes.UUID,
+            //defaultValue: DataTypes.UUIDV4,
+            type:DataTypes.INTEGER,
+            primaryKey:true,
+            autoIncrement:true
+            
         },
         lastname:{
             type:DataTypes.STRING(50),
