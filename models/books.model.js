@@ -1,5 +1,5 @@
 
-const {Sequelize,DataTypes,ModelStatic}=require('sequelize')    
+const {Sequelize,DataTypes,ModelStatic, INTEGER}=require('sequelize')    
 
 //Je ne veux pas ecrire tout dans un seul fichier --> 
 //Pour cela, il me faut des modules, mais pour avoir acces a ces fichiers depuis un autre, je dois les exporter
@@ -14,8 +14,9 @@ const {Sequelize,DataTypes,ModelStatic}=require('sequelize')
 module.exports = (sequelize)=>{
     const Book = sequelize.define('Book',{
         ISBN:{
-            type:DataTypes.STRING(50),
-            primaryKey:true
+            type:INTEGER,
+            primaryKey:true,
+            autoIncrement:true
         },
         title:{
             type:DataTypes.STRING(50),

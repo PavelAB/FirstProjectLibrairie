@@ -20,10 +20,11 @@ module.exports = (sequelize)=>{
         },
         login:{
             type:DataTypes.STRING(50),
+            unique:true,
             allowNull:false
         },
         password:{
-            type:DataTypes.STRING(50),
+            type:DataTypes.STRING(100), // Prevoir plus de caractere vu que password soit hashe
             allowNull:false
         },
         firstname:{

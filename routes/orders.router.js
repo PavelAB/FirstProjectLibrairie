@@ -1,4 +1,5 @@
 const ordersController = require('../controllers/ordersController')
+const authRoles = require('../middlewares/authRoles')
 
 const ordersRouter = require('express').Router()
 
@@ -8,7 +9,7 @@ ordersRouter.route('/')
     .post(ordersController.create)
 ordersRouter.route('/:id')
     .get(ordersController.getByID)
-    .put(ordersController.update)
-    .delete(ordersController.delete)
+    .put(authRoles('Admin'),ordersController.update)
+    .delete(authRoles('Admin'), ordersController.delete)
     
 module.exports = ordersRouter

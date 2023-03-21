@@ -1,3 +1,4 @@
+const authRouter = require('./auth.route')
 const authorRouter = require('./author.router')
 const booksRouter = require('./books.router')
 const genresRouter = require('./genres.router')
@@ -17,6 +18,7 @@ router.use('/books',booksRouter)
 router.use('/orders',ordersRouter)
 router.use('/user',userRouter)
 router.use('/genres',genresRouter)
+router.use('/auth',authRouter)
 
 
 //const router = authorRouter

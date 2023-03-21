@@ -1,5 +1,6 @@
 const {Request,Response}= require('express')
 const ordersService = require('../services/orders.service')
+const SuccessResponse = require('../utils/SuccessResponse')
 
 const ordersController = {
     /**
@@ -8,11 +9,10 @@ const ordersController = {
      * @param { Response} res
      */
     getAll: async (req,res)=>{
-        const orders = await ordersService.getAll()
-        if(orders)
-            res.status(200).json(orders)
-        else
-            res.status(400)
+        const {orders,count} = await ordersService.getAll()
+        
+        res.status(200).json(new SuccessResponse(orders,count))
+        
     },
     /**
      * getByID
@@ -48,7 +48,7 @@ const ordersController = {
     update: async (req,res)=>{
         const id = req.params.id
         const data = req.body
-        const order = await ordersService(id,data)
+        const order = await ordersService.update(id,data)
         if(order===true)
             res.sendStatus(200)
         else
@@ -61,7 +61,7 @@ const ordersController = {
     */
    delete: async (req,res)=>{
        const id = req.params.id
-       const order = await ordersService(id)
+       const order = await ordersService.delete(id)
        if(order===true)
             res.sendStatus(200)
         else

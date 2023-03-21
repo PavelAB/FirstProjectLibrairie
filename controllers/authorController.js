@@ -1,5 +1,6 @@
 const { Request, Response } = require("express")
 const authorService = require("../services/author.service")
+const SuccessResponse = require("../utils/SuccessResponse")
 
 
 
@@ -9,11 +10,11 @@ const authorController  = {
      * @param {Request} req
      * @param { Response} res
      */
-    getAll: async (req,res)=>{
+    getAll: async (req,res)=>{ 
         //le nethode getAll est un promess donc il faut absolument rajoute un await avant si non en resultat je recois un promesse
-        const author = await authorService.getAll()
+        const {authors,count} = await authorService.getAll()
         //je peux simplement envoyer ma variable sous format JSON pour affiche les donner, mais il vaut mieux passer par DTO pour securise mes donnes
-        res.status(200).json(author)
+        res.status(200).json(new SuccessResponse(authors,count))
     },
     /**
      * getByID
@@ -21,11 +22,12 @@ const authorController  = {
      * @param { Response} res
      */
     getByID: async (req,res)=>{
-        console.log(req.params);
         const id = req.params.id
-        console.log(id);
         const author = await authorService.getByID(id)
-        res.status(200).json(author)
+        if(author===null)
+            res.sendStatus(400)
+        else
+            res.status(200).json(author)
     },
     /**
      * Create

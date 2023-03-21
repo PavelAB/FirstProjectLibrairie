@@ -1,6 +1,9 @@
 const {Request,Response}=require('express')
 const db = require('../models')
-const {AuthorDTO}= require('../dto/authors.dto')
+const {AuthorsDTO}= require('../dto/authors.dto');
+const { Book } = require('../models');
+const jwt = require('../utils/jwt.utils');
+
 
 
 
@@ -9,14 +12,21 @@ const {AuthorDTO}= require('../dto/authors.dto')
 
 const authorService={
     getAll:async()=>{
-        const test = await db.Author.findAll();
-        if(test)
-            return test
+        const {rows,count} = await db.Author.findAndCountAll({
+            include:[Book],
+            distinct:true
+
+        })
+        const authors = rows.map(test=>new AuthorsDTO(test))
+        return{
+            authors,count
+        }
     },
     getByID:async(id)=>{
-        const author = await db.Author.findByPk(id);
-        if (author)
-            return author
+        const author = await db.Author.findByPk(id,{
+            include:[Book]
+        });
+        return author? new AuthorsDTO(author) : null;
     },
     
     create: async (data) => {

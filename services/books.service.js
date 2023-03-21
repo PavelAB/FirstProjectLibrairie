@@ -1,15 +1,17 @@
 
+const { BookDTO } = require("../dto/books.dto");
 const { Genres,Author,Orders } = require("../models");
 const db = require("../models");
 
 const BookServices = {
     getAll: async()=>{
-        const books = await db.Book.findAll({
-            include:[Genres,Author,Orders]
-        })
-        if(books)
-        {
-            return books
+        const {rows, count} = await db.Book.findAndCountAll({
+            include:[Genres,Author,Orders],
+            distinct:true
+        }) 
+        const books = rows.map(test=>new BookDTO(test))
+        return{
+            books,count
         }
     },
     getById:async(id)=>{
@@ -17,19 +19,22 @@ const BookServices = {
             include:[Genres,Author,Orders]
         })
         if(book)
-            return book
+            return new BookDTO(book)
         
     },
     create:async(data)=>{
-        //creer une transaction
+        //creer une transaction --> Permet de modifie un paquet d'information d'un seul coup, si il y une erreur tous les modification 
         const transaction = await db.sequelize.transaction()
         let book // creerla variable book
         try {
             book = await db.Book.create(data)
             await book.addGenres(data.genres,{transaction}) // data.genres doit correspondre a "genres" dans l'insomnia
+            await book.addAuthor(data.authors,{transaction})
+            await book.addOrder(data.orders,{transaction}) 
             await transaction.commit() // finir la transaction
             
         } catch (error) {
+            console.log(error);
             await transaction.rollback()
             return null
         }

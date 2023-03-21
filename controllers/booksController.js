@@ -1,5 +1,6 @@
  const {Request,Response}= require('express')
 const BookServices = require('../services/books.service')
+const SuccessResponse = require('../utils/SuccessResponse')
 
  const booksController = {
     /**
@@ -8,13 +9,8 @@ const BookServices = require('../services/books.service')
      * @param { Response} res
      */
     getAll: async (req,res)=>{
-        const allBooks = await BookServices.getAll()
-        if(allBooks)
-        {
-            res.status(200).json(allBooks)
-        }
-        else 
-            res.status(501)
+        const {books,count} = await BookServices.getAll()
+        res.status(200).json(new SuccessResponse(books,count))
     },
     /**
      * getByID
@@ -26,7 +22,7 @@ const BookServices = require('../services/books.service')
         const thisBook = await BookServices.getById(id)
         if(thisBook)
         {
-            res.status(200).json(thisBook)
+            res.status(200).json(new SuccessResponse(thisBook))
         }
         else
             res.sendStatus(501)

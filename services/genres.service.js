@@ -1,16 +1,27 @@
+const {GenreDTO} = require("../dto/genres.dto")
+const { Book, User } = require("../models");
 const db = require("../models");
 
 const genreService = {
     getAll:async()=>{
-        const thisGenres = await db.Genres.findAll()
-        //.findAll() --> une table des donnes
-        if(thisGenres)
-            return thisGenres
+        const {count, rows} = await db.Genres.findAndCountAll({
+            distinct:true,
+            include:[Book]
+        })
+
+
+        const tests = rows.map(test=>new GenreDTO(test))
+
+        return{
+            tests,count
+        }
     },
     getById:async(id)=>{
-        const thisGenre = await db.Genres.findByPk(id)
+        const thisGenre = await db.Genres.findByPk(id,{
+            include:[Book] 
+        })
         if(thisGenre)
-            return thisGenre
+            return new GenreDTO(thisGenre)
     },
     create:async(data)=>{
         const newGenre = await db.Genres.create(data)
