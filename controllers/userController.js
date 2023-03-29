@@ -27,7 +27,7 @@ const userController = {
         const user = await userService.getById(id)
         
         if(user)
-            res.status(200).json(new SuccessResponse(user))
+            res.status(200).json(user)
         else
             res.sendStatus(400) 
     },
@@ -42,7 +42,7 @@ const userController = {
         
 
         if(user)
-            res.sendStatus(200)
+            res.sendStatus(204)
         else
             res.sendStatus(400)
     },
@@ -56,7 +56,7 @@ const userController = {
         const data = req.body
         const user = await userService.update(id,data)
         if(user===true)
-            res.sendStatus(200)
+            res.sendStatus(204)
         else
             res.sendStatus(400)
     },
@@ -69,7 +69,7 @@ const userController = {
        const id = req.params.id
        const user = await userService.delete(id)
         if(user)
-            res.sendStatus(200)
+            res.sendStatus(204)
         else
             res.sendStatus(400)
     }

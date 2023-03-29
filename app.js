@@ -4,9 +4,11 @@ require('dotenv').config(); // Si j'ai des donnees dans un fichier .env, il faut
 
 //importe de l'express.
 const express = require('express')
+const cors= require('cors')
 //creaton de l'instance express
 const app = express() 
 
+app.use(cors())
 
 //absolument mettre avant le route car si non l'express n'est pas au courant de l'existance de objet json
 app.use(express.json())

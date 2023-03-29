@@ -1,22 +1,13 @@
-const { BookForGenres } = require("./books.dto")
+const { BookForGenres } = require("./books.dto");
 
 
 class GenreDTO{
-    constructor({name_genres,Books})
+    constructor({ID_genres,name_genres,Books})
     {
+        this.id=ID_genres
         this.name_genres=name_genres
-        try {
-            this.Books=Books? Books.map(test=>new BookForGenres(test)):[]
-            
-        } catch (error) {
-            console.log(error);
-            this.Books=Books
-        }
+        this.Books = Books? Books.map(test=>new BookForGenres(test)):[]
     }
 }
-class GenreForBook{
-    constructor({name_genres}){
-        this.name_genres=name_genres
-    }
-}
-module.exports={GenreDTO,GenreForBook}
+
+module.exports = {GenreDTO}

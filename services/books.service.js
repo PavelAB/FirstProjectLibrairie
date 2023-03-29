@@ -27,9 +27,11 @@ const BookServices = {
         const transaction = await db.sequelize.transaction()
         let book // creerla variable book
         try {
+            console.log(data);
             book = await db.Book.create(data)
+
             await book.addGenres(data.genres,{transaction}) // data.genres doit correspondre a "genres" dans l'insomnia
-            await book.addAuthor(data.authors,{transaction})
+            await book.addAuthors(data.Author,{transaction})
             await book.addOrder(data.orders,{transaction}) 
             await transaction.commit() // finir la transaction
             
@@ -44,19 +46,72 @@ const BookServices = {
 
     },
     update:async(id,data)=>{
-        console.log(id);
-        console.log(data);
-        const book = await db.Book.update(data,{
-            where:{
-                ISBN:id
-            }
-        })
-        // je recois en retour de book un table, en premiere position --> nmbre de lignes affectes
-        if(book[0]===1){
-            return true}
-        else
+        const transaction = await db.sequelize.transaction()
+        let updateBook
+        try {
+            updateBook = await db.Book.update(data,{
+                where:{
+                    ISBN:id
+                },
+                include:[Author,Genres]
+            })
+            const isBookToUpdate = await db.Book.findByPk(id,{
+                include:[Author,Genres]
+            })
+            console.log("isBookToUpdate",isBookToUpdate);
+            console.log(data.Author);
+            console.log(data.genres);
+            await isBookToUpdate.addAuthors(data.Author,{transaction})
+            await isBookToUpdate.addGenres(data.genres,{transaction})
+            await transaction.commit()
+
+            
+        } catch (error) {
+            console.log(error);
+            await transaction.rollback()
             return false
+        }
+        // je recois en retour de book un table, en premiere position --> nmbre de lignes affectes
+        return true
         
+    },
+    deleteGenreInBook:async(id,data)=>{
+        const transaction = await db.sequelize.transaction()
+        try {
+            const isBookToUpdate = await db.Book.findByPk(id,{
+                include:[Genres] 
+            })
+            console.log(isBookToUpdate);
+
+            console.log(data);
+            await isBookToUpdate.removeGenres(data,{transaction})
+            await transaction.commit()
+            
+        } catch (error) {
+            console.log(error);
+            await transaction.rollback()
+            return false
+        }
+        return true
+    },
+    deleteAuthorInBook:async(id,data)=>{
+        const transaction = await db.sequelize.transaction()
+        try {
+            const isBookToUpdate = await db.Book.findByPk(id,{
+                include:[Author] 
+            })
+            console.log(isBookToUpdate);
+
+            console.log(data);
+            await isBookToUpdate.removeAuthors(data,{transaction})
+            await transaction.commit()
+            
+        } catch (error) {
+            console.log(error);
+            await transaction.rollback()
+            return false
+        }
+        return true
     },
     delete:async(id)=>{
         const book = await db.Book.destroy({

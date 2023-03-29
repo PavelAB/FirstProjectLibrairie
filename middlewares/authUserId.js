@@ -8,20 +8,16 @@ const authUserId = ()=>{
      * @param {Response} res
      */
     return async (req,res,next)=>{
+        console.log("Im here");
         const bearerToken = req.headers.authorization
         //console.log(bearerToken);
         const token = bearerToken? bearerToken?.split(" ")[1] : null
         //console.log(token);
         
         const payload = await jwt.decode(token)
-
-        const id = req.params.id
-        // console.log("ID===>>"+id);  ====>> Poser le question
-        // if(id!=payload.id)
-        // {
-        //     console.log(`${id} !== ${payload.id}`);
-        //     console.log("yep");
-        // }
+        console.log(payload.id);
+        const id = req.params.id //id dans le params est une chaine de caracteres, id dans le payload est un number ==> egalite strict ne fonction pas!
+        console.log("ID",id);
         if(payload.role !=="Admin" && id!=payload.id)
             {
                 res.status(401).json("Acces Interdit")

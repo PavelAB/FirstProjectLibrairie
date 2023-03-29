@@ -24,22 +24,66 @@ const genreService = {
             return new GenreDTO(thisGenre)
     },
     create:async(data)=>{
-        const newGenre = await db.Genres.create(data)
-        if(newGenre)
+        const transaction = await db.sequelize.transaction()
+        let genre
+        try {
+            genre = await db.Genres.create(data)
+            console.log(genre);
+            await genre.addBook(data.Books,transaction)
+            await transaction.commit()
+        } catch (error) {
+            console.log(error);
+            await transaction.rollback()
+            return false            
+        }
+        if(genre)
             return true
-        else    
-            return false
     },
     update:async(id,data)=>{
-        const updateGenre = await db.Genres.update(data,{
-            where:{
-                ID_genres : id
-            }
-        })
-        if(updateGenre[0]===1)
-            return true
-        else 
+        console.log("coucou im here");
+        const transaction = await db.sequelize.transaction()
+        let updateGenre
+        try {
+            updateGenre = await db.Genres.update(data,{
+                where:{
+                    ID_genres : id
+                },
+                include:[Book]
+            })
+            const isGenreToUpdate = await db.Genres.findByPk(id,{
+                include:[Book] 
+            })
+            console.log(isGenreToUpdate);
+
+            console.log(data.Books);
+            await isGenreToUpdate.addBook(data.Books,{transaction})
+            await transaction.commit()
+            console.log("tout est ok");
+        } catch (error) {
+            console.log(error);
+            await transaction.rollback()
             return false
+        }
+        return true
+    },
+    updateBookInGenre:async(id,data)=>{
+        const transaction = await db.sequelize.transaction()
+        try {
+            const isGenreToUpdate = await db.Genres.findByPk(id,{
+                include:[Book] 
+            })
+            console.log(isGenreToUpdate);
+
+            console.log(data);
+            await isGenreToUpdate.removeBook(data,{transaction})
+            await transaction.commit()
+            
+        } catch (error) {
+            console.log(error);
+            await transaction.rollback()
+            return false
+        }
+        return true
     },
     delete:async(id)=>{
         const deleteGenre = await db.Genres.destroy({

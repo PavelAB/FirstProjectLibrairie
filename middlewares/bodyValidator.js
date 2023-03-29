@@ -4,8 +4,11 @@ const {Request,Response,NextFunction} = require('express')
  * 
  * @param {ObjectSchema} yupValidator
  */
-const bodyValidator =(yupValidator)=>{
-    
+const bodyValidator = (yupValidator)=>{
+    /**
+     * @param {Request} req
+     * @param {Response} res
+     */
     return async(req,res,next)=>{
     try {
             

@@ -1,19 +1,21 @@
-class UserDTOToken{ 
-    constructor({firstname,lastname,birth_date},token)
+    class UserDTOToken{ 
+    constructor({ID_User,role},token)
     {
-        this.firstname = firstname,
-        this.lastname = lastname,
-        this.birth_date = birth_date,
+        this.ID_User = ID_User,
+        this.role = role,
         this.token= token
     }
 }
 class UserDTO{
-    constructor({ID_User,firstname,lastname,birth_date,role})
+    constructor({ID_User,firstname,lastname,birth_date,login,role,Orders})
     {
-        this.id=ID_User
+        this.ID_User=ID_User
         this.firstname=firstname
         this.lastname=lastname
+        this.login=login
+        this.role=role
         this.birth_date=birth_date
+        this.Orders= Orders
     }
 }
 class UserDTOForOrders{

@@ -6,12 +6,13 @@ const jwt ={
     //Dans le token je veux stocker l'info par qui est genere ce token (id), role de user (role)
 
 
-    generate: ({id,role})=>{
+    generate: ({ID_User,role})=>{
+        console.log(ID_User);
         //je cree mon token dans une PROMISE ---> revoir pq je fais ca
         //fonction qui recois en parametre le id et role et stocek cette information dans ke token
         return new Promise((resolve,reject)=>{
             //Simple variables ou je stocke les donnes que j'ai besoin
-            const payload = {id,role}
+            const payload = {id : ID_User,role}
             const secret = JWT_SECRET  
             const options = {
                 algorithm :"HS256",
@@ -45,6 +46,7 @@ const jwt ={
                 if(error){
                     reject (error)
                 }
+                    console.log(payload);
                     resolve (payload)
             })
         })

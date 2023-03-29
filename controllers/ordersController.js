@@ -12,8 +12,19 @@ const ordersController = {
         const {orders,count} = await ordersService.getAll()
         
         res.status(200).json(new SuccessResponse(orders,count))
-        
+     },
+    /**
+     * GetAllForThisUser
+     * @param {Request} req
+     * @param { Response} res
+     */
+    getAllForThisUser: async (req,res)=>{
+        const id = req.params.id
+        const {orders,count} = await ordersService.getAllForThisUser(id)
+        console.log(orders);
+        res.status(200).json(new SuccessResponse(orders,count))
     },
+
     /**
      * getByID
      * @param {Request} req
@@ -36,7 +47,7 @@ const ordersController = {
         const data = req.body
         const order = await ordersService.create(data)
         if(order)
-            res.sendStatus(200)
+            res.sendStatus(204)
         else
             res.sendStatus(400)
     },
@@ -50,7 +61,7 @@ const ordersController = {
         const data = req.body
         const order = await ordersService.update(id,data)
         if(order===true)
-            res.sendStatus(200)
+            res.sendStatus(204)
         else
             res.sendStatus(400)
     },
@@ -63,7 +74,7 @@ const ordersController = {
        const id = req.params.id
        const order = await ordersService.delete(id)
        if(order===true)
-            res.sendStatus(200)
+            res.sendStatus(204)
         else
             res.sendStatus(400)
    }

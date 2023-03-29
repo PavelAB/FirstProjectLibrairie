@@ -1,18 +1,19 @@
-const {AuthorForBook} = require('./authors.dto');
+const {AuthorForBook} = require('./authorBookDTO') // Attention a circular dependency
+const {GenreForBook} =require('./genreBookDTO')
        
-const { GenreForBook } = require("./genres.dto");
-
 
 class BookForGenres{
-    constructor({title}){
+    constructor({title,ISBN}){
         this.title = title
+        this.ISBN = ISBN
     }
 }
 
 class BooKForOrders{
-    constructor({title,price}){
+    constructor({title,price,ISBN}){
         this.title=title
         this.price=price
+        this.ISBN=ISBN
     }
 }
 class BookDTO{
@@ -22,18 +23,15 @@ class BookDTO{
         this.price = price
         this.isSale=isSale
         this.entry_date=entry_date
-        try {
-            
-            console.log(Authors);
-            const tests = Authors? Authors.map(test=>new AuthorForBook(test)):[]
-            console.log(tests);
-        } catch (error) {
-            console.log(error);
-            this.Authors=Authors
-        }
+        this.Author = Authors? Authors.map(test=>new AuthorForBook(test)):[]
         this.Genres= Genres? Genres.map(test=>new GenreForBook(test)):[]
-
     }
 }
 
-module.exports = {BookForGenres, BooKForOrders, BookDTO}
+
+
+module.exports = {
+    BookForGenres, 
+    BooKForOrders, 
+    BookDTO
+}

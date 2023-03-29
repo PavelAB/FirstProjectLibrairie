@@ -22,10 +22,11 @@ const SuccessResponse = require('../utils/SuccessResponse')
         const thisBook = await BookServices.getById(id)
         if(thisBook)
         {
-            res.status(200).json(new SuccessResponse(thisBook))
+            console.log('booooooooooooooooook',thisBook);
+            res.status(200).json(thisBook)
         }
         else
-            res.sendStatus(501)
+            res.sendStatus(400)
     },
     /**
      * Create
@@ -33,6 +34,7 @@ const SuccessResponse = require('../utils/SuccessResponse')
      * @param { Response} res
      */
     create: async (req,res)=>{
+        console.log(req.body);
         const data = req.body
         const newBook = await BookServices.create(data)
         if(newBook)
@@ -58,6 +60,40 @@ const SuccessResponse = require('../utils/SuccessResponse')
             res.sendStatus(501)
     },
     /**
+     * deleteGenreInBook
+     * @param {Request} req
+     * @param { Response} res
+     */
+    deleteGenreInBook: async (req,res)=>{
+        const id = req.params.id
+        const data = req.body.ID_genres
+        console.log(data);
+        const updateGenre = await BookServices.deleteGenreInBook(id,data)
+        if(updateGenre===true){
+            res.sendStatus(204)
+        }
+        else    
+            res.sendStatus(400)
+    },
+    
+    /**
+     * deleteAuthorInBook
+     * @param {Request} req
+     * @param { Response} res
+     */
+    deleteAuthorInBook: async (req,res)=>{
+        
+        const id = req.params.id
+        const data = req.body.ID_Author
+        console.log(data);
+        const updateGenre = await BookServices.deleteAuthorInBook(id,data)
+        if(updateGenre===true){
+            res.sendStatus(204)
+        }
+        else    
+            res.sendStatus(400)
+    },
+    /**
     * delete
     * @param {Request} req
     * @param { Response} res
@@ -66,7 +102,7 @@ const SuccessResponse = require('../utils/SuccessResponse')
        const id = req.params.id
        const isDeleted = await BookServices.delete(id)
        if(isDeleted===true)
-            res.sendStatus(200)
+            res.sendStatus(204)
         else
             res.sendStatus(400)
    }

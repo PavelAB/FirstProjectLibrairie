@@ -1,12 +1,14 @@
 const db = require("../models");
 const argon2 = require('argon2');
 const { UserDTO } = require("../dto/user.dto");
+const { Orders } = require("../models");
 
 
 const userService ={
     getAll:async()=>{
         const {rows,count}= await db.User.findAndCountAll({
-            distinct:true
+            distinct:true,
+            include:[Orders]
         })
         const users = rows.map(test=>new UserDTO(test))
         return{
@@ -14,7 +16,9 @@ const userService ={
         }
     },
     getById:async(id)=>{
-        const user = await db.User.findByPk(id)
+        const user = await db.User.findByPk(id,{
+            include:[Orders]
+        })
         if(user)
             return new UserDTO(user)
     },

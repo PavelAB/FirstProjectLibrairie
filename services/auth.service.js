@@ -14,13 +14,11 @@ const authService = {
         }
         const newUser = await db.User.create(user)
         console.log(newUser);
-        const id = newUser.ID_User
-        const role = newUser.role
-        const token = await jwt.generate({id,role})
+        const token = await jwt.generate(newUser)
         console.log(token); // pas oublie le await!!!!!
 
         if(newUser){
-            return new UserDTOToken(user,token)
+            return new UserDTOToken(newUser,token)
         }  
         return null
     },
@@ -36,7 +34,7 @@ const authService = {
             return null
         try {
             if ( await argon2.verify(user.password,password))
-                return new UserDTO(user)
+                return user
             else
                 return null
         } catch (error) {

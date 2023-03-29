@@ -30,12 +30,25 @@ const authorService={
     },
     
     create: async (data) => {
-        //methode create cree une nouvelle ligne dans ma bd author
-        const newAuthor = await db.Author.create(data)
+
+        const transaction = await db.sequelize.transaction()
+        let newAuthor
+
+        try {
+            newAuthor = await db.Author.create(data)
+            await newAuthor.addBook(data.Books,transaction)
+            await transaction.commit()
+            
+        } catch (error) {
+            console.log(error)
+            await transaction.rollback()
+            return false
+        }
         if(newAuthor){
             return true
         }
-        else return false
+        else 
+            return false
     },
     update: async (id,data)=>{
         const isUpdate = await db.Author.update(data,{

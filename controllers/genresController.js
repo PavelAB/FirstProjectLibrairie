@@ -10,8 +10,6 @@ const genreController = {
      */
       getAll: async (req,res)=>{
         const {tests,count} = await genreService.getAll()
-        console.log({tests,count});
-        console.log(tests);
         res.status(200).json(new SuccessResponse(tests,count))
     },
     /**
@@ -24,8 +22,8 @@ const genreController = {
         const genre = await genreService.getById(id)
         if(genre)
             res.status(200).json(genre)
-        else
-            res.sendStatus(400)
+        else{
+            res.sendStatus(400)}
     },
     /**
      * Create
@@ -35,8 +33,9 @@ const genreController = {
     create: async (req,res)=>{
         const data = req.body
         const newGenre = await genreService.create(data)
-        if(newGenre)
-            res.sendStatus(200)
+        if(newGenre){
+            res.sendStatus(204) //si je renvoi le code 200 et 201, il y aucune response
+        }    
         else
             res.sendStatus(400)
     },
@@ -48,10 +47,25 @@ const genreController = {
     update: async (req,res)=>{
         const id = req.params.id
         const data = req.body
+        console.log(req.body);
         const updateGenre = await genreService.update(id,data)
         if(updateGenre===true){
-            //res.location("/genres/"+id) ===> Question
-            res.sendStatus(200)
+            res.sendStatus(204)
+        }
+        else    
+            res.sendStatus(400)
+    },
+    /**
+     * updateBookInGenre
+     * @param {Request} req
+     * @param { Response} res
+     */
+    updateBookInGenre: async (req,res)=>{
+        const id = req.params.id
+        const data = req.body.ISBN
+        const updateGenre = await genreService.updateBookInGenre(id,data)
+        if(updateGenre===true){
+            res.sendStatus(204)
         }
         else    
             res.sendStatus(400)
@@ -65,7 +79,7 @@ const genreController = {
        const id = req.params.id
        const deleteGenre = await genreService.delete(id)
        if(deleteGenre)
-            res.sendStatus(200)
+            res.sendStatus(204)
         else
             res.sendStatus(400)
         }

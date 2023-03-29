@@ -14,6 +14,21 @@ const ordersService ={
             include:[Book,User],
             distinct:true
         })
+        console.log(rows);
+        const orders = rows.map(test=>new OrdersDTO(test))
+        return{
+            orders,count
+        } 
+    
+    },
+    getAllForThisUser:async(id)=>{
+        const {rows,count}= await db.Orders.findAndCountAll({
+            include:[Book,User],
+            where:{
+                UserIDUser:id
+            },
+            distinct:true
+        })
         const orders = rows.map(test=>new OrdersDTO(test))
         return{
             orders,count
@@ -28,11 +43,20 @@ const ordersService ={
             return new OrdersDTO(order)
     },
     create:async(data)=>{
-        const newOrder = await db.Orders.create(data)
-        if(newOrder)
-            return true
-        else
-            return false
+    const transaction = await db.sequelize.transaction()
+    let newOrder
+    try {
+        newOrder = await db.Orders.create(data)
+        console.log(newOrder);
+        await newOrder.addBook(data.book,transaction)
+        await transaction.commit()
+    } catch (error) {
+        console.log(error);
+        await transaction.rollback()
+        return false    
+    }
+    if(newOrder)
+        return true
     },
     update:async(id,data)=>{
         console.log(data,id);
